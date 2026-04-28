@@ -4,6 +4,7 @@ import { Loader } from "../Loader/Loader";
 import { Suspense } from "react";
 import { Outlet } from "react-router-dom";
 import { MainContainer } from "./Layout.styled";
+import CursorEffects from "../CursorEffects/CursorEffects";
 
 const Layout = () => {
 	return (
@@ -14,6 +15,7 @@ const Layout = () => {
 
 			<main>
 				<Suspense fallback={<Loader />}>
+					<CursorEffects />
 					<Outlet />
 				</Suspense>
 			</main>
