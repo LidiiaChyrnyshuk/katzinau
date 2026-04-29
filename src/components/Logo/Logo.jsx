@@ -5,12 +5,15 @@ import { Link } from "react-router-dom";
 const Wrapper = styled(Link)`
 	display: flex;
 	align-items: center;
-	width: 74px;
-	height: 20px;
+	width: 94px;
+	height: auto;
 
 	@media (min-width: 768px) {
-		width: 160px;
-		height: 60px;
+		width: 200px;
+	}
+
+	@media (min-width: 1024px) {
+		width: 290px;
 	}
 `;
 

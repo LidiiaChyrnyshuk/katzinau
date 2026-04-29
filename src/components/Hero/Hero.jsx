@@ -52,7 +52,7 @@ const SubTitleText = styled.div`
   text-align: center;
   text-transform: uppercase;
   text-decoration: none;
-  margin: 0 auto;
+  margin: 20px auto 0 auto;
   width:100%;
   max-width: 580px;
   display: flex;
