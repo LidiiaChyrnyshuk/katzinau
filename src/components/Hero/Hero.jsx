@@ -12,7 +12,7 @@ const TitleText = styled.div`
 	text-align: center;
 	text-transform: uppercase;
 	text-decoration: none;
-	margin: 40px 0 0 0;
+	margin: 30px 0 0 0;
 
 	&::after {
 		content: "";

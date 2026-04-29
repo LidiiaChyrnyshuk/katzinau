@@ -1,9 +1,10 @@
 import styled from "@emotion/styled";
 
 export const Card = styled.div`
-	flex: 0 0 248px;
+	width: 248px;
 	height: 352px;
-	
+	flex: 0 0 auto;
+
 	position: relative;
 	border-radius: 16px;
 	overflow: hidden;

@@ -2,8 +2,11 @@ import styled from "@emotion/styled";
 
 export const MainContainer = styled.div`
 	display: grid;
-	gap: 16px;
+	gap: 0;
+	width:100%;
 	max-width: 1200px;
 	margin: 0 auto;
-	padding: 16px;
+	padding: 0;
+	border: 0;
+	
 `;

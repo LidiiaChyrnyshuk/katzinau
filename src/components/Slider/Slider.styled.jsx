@@ -1,86 +1,109 @@
 import styled from "@emotion/styled";
+import taps from "../../assets/slider_title_img.png";
+import herz from "../../assets/slider_title_herz.png";
 
 export const SliderSection = styled.section`
 	position: relative;
-	padding: 0 8px;
+	padding-bottom: 20px;
 	width: 100%;
-	max-width:100vw;
+	max-width: 100vw;
 	overflow-x: hidden;
 	contain: layout paint;
-
+	background: #fd2c72;
 	margin-top: 20px;
 
 	@media (min-width: 960px) {
-		padding: 0 16px;
+		padding-bottom: 20px;
 	}
 `;
 
-export const ArrowsWrap = styled.div``;
+export const SliderTitle = styled.div`
+position: relative;
+z-index:5;
+	font-weight: 900;
+	font-size: 24px;
+	line-height: 1.2;
+	text-transform: uppercase;
+	text-align: left;
+	color:#ffffff;
+	padding-left:16px;
+	margin-bottom: 20px;
 
-export const Arrow = styled.a`
-	position: absolute;
-	top: 50%;
-	transform: translateY(-50%);
-	z-index: 20;
+	&::after {
+			content: "";
+			position: absolute;
+			top: 0;
+			right: 50%;
+			width: 11.11vw;
+			height: 8.33vw;
+	
+			background-image: url(${taps});
+			background-size: contain;
+			background-repeat: no-repeat;
+			z-index:2;
+		}
 
-	display: flex;
-	align-items: center;
-	justify-content: center;
+		&::before {
+			content: "";
+			position: absolute;
+			top: 0;
+			right: 0;
+			width: 27.77vw;
+			height: 80px;
+	
+			background-image: url(${herz});
+			background-size: contain;
+			background-repeat: no-repeat;
+			z-index:2;
+		}
 
-	width: 48px;
-	height: 48px;
+		@media (min-width: 1024px) {
+				font-size: 90px;
+		
+				&::after {
+					content: "";
+					position: absolute;
+					top: 0;
+					right: 30%;
+					width: 180px;
+					height: 170px;
+		
+					background-image: url(${taps});
+					background-size: contain;
+					background-repeat: no-repeat;
+				}
 
-	border-radius: 12px;
-	background: rgba(255, 255, 255, 0.24);
-	backdrop-filter: blur(8px);
-
-	opacity: 0.8;
-	transition: opacity 0.2s ease;
-
-	&.is-disabled {
-		opacity: 0;
-		pointer-events: none;
-	}
-
-	&:hover {
-		opacity: 1;
-	}
-`;
-
-export const ArrowLeft = styled(Arrow)`
-	left: 16px;
-
-	@media (min-width: 960px) {
-		left: 32px;
-	}
-`;
-
-export const ArrowRight = styled(Arrow)`
-	right: 16px;
-
-	@media (min-width: 960px) {
-		right: 32px;
-	}
+				&::before {
+			content: "";
+			position: absolute;
+			top: 120px;
+			right: 10px;
+			width: 180px;
+			height: 120px;
+	
+			background-image: url(${herz});
+			background-size: contain;
+			background-repeat: no-repeat;
+		}
 `;
 
 export const SliderContainer = styled.div`
 	position: relative;
 	width: 100%;
-	
+
 	overflow: hidden;
 
 	border-radius: 24px;
 	border: 2px solid transparent;
 
-	background-image:
-		linear-gradient(
-			97.15deg,
-			#f1c68a 0%,
-			#ffeace 40%,
-			#ffffff 50%,
-			#ffeace 60%,
-			#f1c68a 100%
-		);
+	background-image: linear-gradient(
+		120deg,
+		#fd2c72 0%,
+		#ff5c8f 30%,
+		#ffffff 50%,
+		#ff5c8f 70%,
+		#fd2c72 100%
+	);
 
 	background-origin: border-box;
 	background-clip: padding-box, border-box;
@@ -94,8 +117,8 @@ export const SliderContainer = styled.div`
 `;
 
 export const Mask = styled.div`
-	--mask-left: 10%;
-	--mask-right: 90%;
+	--mask-left: 5%;
+	--mask-right: 95%;
 
 	-webkit-mask-image: linear-gradient(
 		to right,
@@ -126,7 +149,7 @@ export const Track = styled.div`
 	display: flex;
 	gap: 8px;
 	height: 352px;
-	
+
 	will-change: transform;
 	cursor: grab;
 	touch-action: pan-y;

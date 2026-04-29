@@ -9,11 +9,11 @@ import CursorEffects from "../CursorEffects/CursorEffects";
 const Layout = () => {
 	return (
 		<MainContainer>
-			<div>
+			<div style={{ overflow: "hidden", width: "100%" }}>
 				<AppBar />
 			</div>
 
-			<main>
+			<main style={{ overflow: "hidden", width: "100%" }}>
 				<Suspense fallback={<Loader />}>
 					<CursorEffects />
 					<Outlet />

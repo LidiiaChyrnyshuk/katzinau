@@ -6,7 +6,8 @@ const CTAButton = styled(Link)`
 	margin-top: 24px;
 	padding: 16px 32px;
 
-	background: linear-gradient(90deg, #ff4d6d, #ff7a5c);
+	background: linear-gradient(88.01deg, #fd267a 0%, #ff6036 100%);
+
 	color: white;
 
 	font-weight: 700;
