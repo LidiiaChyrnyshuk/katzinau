@@ -20,7 +20,7 @@ const Layout = () => {
 				</Suspense>
 			</main>
 
-			<div>
+			<div style={{ overflow: "hidden", width: "100%" }}>
 				<Footer />
 			</div>
 		</MainContainer>
