@@ -1,7 +1,7 @@
 import { Card, Img, Info, Actions } from "./CatCard.styled";
 
 
-export default function CatCard({ cat }) {
+export default function CatCard({ cat, onLike, onDislike, onSuperLike }) {
 	return (
 		<Card>
 			<Img src={cat.img} alt={cat.name} />
@@ -14,9 +14,9 @@ export default function CatCard({ cat }) {
 			</Info>
 
 			<Actions>
-				<button>❌</button>
-				<button>⭐</button>
-				<button>❤️</button>
+				<button onClick={() => onDislike(cat)}>❌</button>
+				<button onClick={() => onSuperLike(cat)}>⭐</button>
+				<button onClick={() => onLike(cat)}>❤️</button>
 			</Actions>
 		</Card>
 	);

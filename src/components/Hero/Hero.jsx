@@ -2,6 +2,10 @@ import styled from "@emotion/styled";
 import herz from "../../assets/herz.png";
 import Button from "../Button/Button";
 
+const HeroSection = styled.section`
+	text-align: center;
+	
+`;
 
 const TitleText = styled.div`
 	position: relative;
@@ -67,18 +71,17 @@ const SubTitleText = styled.div`
 
 export default function Hero() {
   return (
-    <>
-      <TitleText>
-        Мяу...
-        <br /> свайпай лапкою,
-        <br /> обирай серцем
-      </TitleText>
-      <SubTitleText>
-        Найди того, з ким можна мурчати під місяцем, ганяти м’ячик чи просто
-        валятися на сонечку
-      </SubTitleText>
-      <Button></Button>
-      
-    </>
-  );
+		<HeroSection>
+			<TitleText>
+				Мяу...
+				<br /> свайпай лапкою,
+				<br /> обирай серцем
+			</TitleText>
+			<SubTitleText>
+				Найди того, з ким можна мурчати під місяцем, ганяти м’ячик чи просто
+				валятися на сонечку
+			</SubTitleText>
+			<Button></Button>
+		</HeroSection>
+	);
 }
