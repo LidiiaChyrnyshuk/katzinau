@@ -75,7 +75,7 @@ export default function CursorEffects() {
 				position: "fixed",
 				inset: 0,
 				pointerEvents: "none",
-				zIndex: 0,
+				zIndex: 100,
 			}}
 		/>
 	);

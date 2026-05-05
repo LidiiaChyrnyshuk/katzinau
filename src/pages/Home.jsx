@@ -1,13 +1,16 @@
 import Hero from "../components/Hero/Hero";
 import { useState, useEffect } from "react";
-import {cats} from "../data/cats";
+import { cats as initialCats } from "../data/cats";
+import { getCats, saveCats } from "../services/catsService";
 import Slider from "../components/Slider/Slider";
 import MatchSection from "../components/MatchSection/MatchSection";
 
 export default function Home() {
+	const [cats, setCats] = useState([]);
 	const [likedCats, setLikedCats] = useState([]);
 	const [match, setMatch] = useState(null);
 
+	// ❤️ лайки
 	const handleLike = (cat) => {
 		if (match) return;
 
@@ -25,6 +28,19 @@ export default function Home() {
 		console.log("super like ⭐", cat);
 	};
 
+	// 🐱 ініціалізація котів
+	useEffect(() => {
+		const stored = getCats();
+
+		if (stored.length > 0) {
+			setCats(stored);
+		} else {
+			setCats(initialCats);
+			saveCats(initialCats);
+		}
+	}, []);
+
+	// 💖 відновлення match
 	useEffect(() => {
 		const saved = localStorage.getItem("match");
 
@@ -39,12 +55,12 @@ export default function Home() {
 			} else {
 				localStorage.removeItem("match");
 			}
-		} catch (e) {
-			console.error("localStorage parse error", e);
+		} catch {
 			localStorage.removeItem("match");
 		}
 	}, []);
 
+	// 💥 створення match
 	useEffect(() => {
 		if (likedCats.length === 2 && !match) {
 			const newMatch = [likedCats[0], likedCats[1]];
@@ -62,9 +78,11 @@ export default function Home() {
 			setLikedCats([]);
 		}
 	}, [likedCats, match]);
+
 	return (
 		<>
 			<Hero />
+
 			<div style={{ overflow: "hidden", width: "100%" }}>
 				<Slider
 					cats={cats}
@@ -73,6 +91,7 @@ export default function Home() {
 					onSuperLike={handleSuperLike}
 				/>
 			</div>
+
 			{match && <MatchSection cats={match} />}
 		</>
 	);

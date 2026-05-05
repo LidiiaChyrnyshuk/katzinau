@@ -14,8 +14,8 @@ const Layout = () => {
 			</div>
 
 			<main style={{ overflow: "hidden", width: "100%" }}>
+				<CursorEffects />
 				<Suspense fallback={<Loader />}>
-					<CursorEffects />
 					<Outlet />
 				</Suspense>
 			</main>
