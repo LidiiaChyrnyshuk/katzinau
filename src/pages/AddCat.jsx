@@ -28,7 +28,7 @@ export default function AddCat() {
 	const [errors, setErrors] = useState({});
 	const [preview, setPreview] = useState("");
 
-	// 🔥 upload image (готово під бек)
+	//  upload image (готово під бек)
 	const handleImageUpload = async (e) => {
 		const file = e.target.files[0];
 		if (!file) return;
@@ -103,7 +103,7 @@ export default function AddCat() {
 				/>
 				{errors.age && <ErrorText>{errors.age}</ErrorText>}
 
-				{/* 🔥 upload file */}
+				{/*  upload file */}
 				<Input type="file" accept="image/*" onChange={handleImageUpload} />
 				{errors.img && <ErrorText>{errors.img}</ErrorText>}
 

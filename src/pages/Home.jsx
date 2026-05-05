@@ -10,7 +10,33 @@ export default function Home() {
 	const [likedCats, setLikedCats] = useState([]);
 	const [match, setMatch] = useState(null);
 
-	// ❤️ лайки
+	// 🔧 універсальне оновлення статистики
+	const updateStats = (catId, type) => {
+		const updated = cats.map((c) => {
+			const stats = c.stats || {
+				likes: 0,
+				dislikes: 0,
+				superLikes: 0,
+			};
+
+			if (c.id === catId) {
+				return {
+					...c,
+					stats: {
+						...stats,
+						[type]: (stats[type] || 0) + 1,
+					},
+				};
+			}
+
+			return c;
+		});
+
+		setCats(updated);
+		saveCats(updated);
+	};
+
+	// ❤️ лайк
 	const handleLike = (cat) => {
 		if (match) return;
 
@@ -18,25 +44,40 @@ export default function Home() {
 			if (prev.find((c) => c.id === cat.id)) return prev;
 			return [...prev, cat].slice(-2);
 		});
+
+		updateStats(cat.id, "likes");
 	};
 
+	// ❌ дизлайк
 	const handleDislike = (cat) => {
-		console.log("dislike", cat);
+		updateStats(cat.id, "dislikes");
 	};
 
+	// ⭐ суперлайк
 	const handleSuperLike = (cat) => {
-		console.log("super like ⭐", cat);
+		updateStats(cat.id, "superLikes");
 	};
 
-	// 🐱 ініціалізація котів
+	// 🐱 ІНІЦІАЛІЗАЦІЯ (ОДИН ЄДИНИЙ useEffect)
 	useEffect(() => {
-		const stored = getCats();
+		const stored = getCats() || [];
 
 		if (stored.length > 0) {
 			setCats(stored);
 		} else {
-			setCats(initialCats);
-			saveCats(initialCats);
+			const prepared = initialCats.map((cat) => ({
+				...cat,
+				description: cat.description || "Без опису 🐾",
+				ownerId: cat.ownerId || "user-1",
+				stats: cat.stats || {
+					likes: 0,
+					dislikes: 0,
+					superLikes: 0,
+				},
+			}));
+
+			setCats(prepared);
+			saveCats(prepared);
 		}
 	}, []);
 
@@ -51,29 +92,31 @@ export default function Home() {
 			const WEEK = 7 * 24 * 60 * 60 * 1000;
 
 			if (Date.now() - parsed.date < WEEK) {
-				setMatch(parsed.cats);
+				const matchedCats = cats.filter((cat) => parsed.cats.includes(cat.id));
+
+				setMatch(matchedCats);
 			} else {
 				localStorage.removeItem("match");
 			}
 		} catch {
 			localStorage.removeItem("match");
 		}
-	}, []);
+	}, [cats]);
 
-	// 💥 створення match
+	// 💘 створення match
 	useEffect(() => {
 		if (likedCats.length === 2 && !match) {
 			const newMatch = [likedCats[0], likedCats[1]];
 
 			setMatch(newMatch);
 
-			localStorage.setItem(
-				"match",
-				JSON.stringify({
-					cats: newMatch,
-					date: Date.now(),
-				}),
-			);
+localStorage.setItem(
+	"match",
+	JSON.stringify({
+		cats: newMatch.map((cat) => cat.id),
+		date: Date.now(),
+	}),
+);
 
 			setLikedCats([]);
 		}
