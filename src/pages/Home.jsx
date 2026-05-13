@@ -1,126 +1,117 @@
+// src/pages/Home.jsx
+
 import Hero from "../components/Hero/Hero";
 import { useState, useEffect } from "react";
 import { cats as initialCats } from "../data/cats";
 import { getCats, saveCats } from "../services/catsService";
+
 import Slider from "../components/Slider/Slider";
 import MatchSection from "../components/MatchSection/MatchSection";
 
 export default function Home() {
 	const [cats, setCats] = useState([]);
-	const [likedCats, setLikedCats] = useState([]);
 	const [match, setMatch] = useState(null);
 
-	// 🔧 універсальне оновлення статистики
-	const updateStats = (catId, type) => {
-		const updated = cats.map((c) => {
-			const stats = c.stats || {
-				likes: 0,
-				dislikes: 0,
-				superLikes: 0,
-			};
-
-			if (c.id === catId) {
-				return {
-					...c,
-					stats: {
-						...stats,
-						[type]: (stats[type] || 0) + 1,
-					},
-				};
-			}
-
-			return c;
-		});
-
-		setCats(updated);
-		saveCats(updated);
-	};
-
-	// ❤️ лайк
-	const handleLike = (cat) => {
-		if (match) return;
-
-		setLikedCats((prev) => {
-			if (prev.find((c) => c.id === cat.id)) return prev;
-			return [...prev, cat].slice(-2);
-		});
-
-		updateStats(cat.id, "likes");
-	};
-
-	// ❌ дизлайк
-	const handleDislike = (cat) => {
-		updateStats(cat.id, "dislikes");
-	};
-
-	// ⭐ суперлайк
-	const handleSuperLike = (cat) => {
-		updateStats(cat.id, "superLikes");
-	};
-
-	// 🐱 ІНІЦІАЛІЗАЦІЯ (ОДИН ЄДИНИЙ useEffect)
+	// 🐱 init cats
 	useEffect(() => {
 		const stored = getCats() || [];
 
 		if (stored.length > 0) {
 			setCats(stored);
 		} else {
-			const prepared = initialCats.map((cat) => ({
-				...cat,
-				description: cat.description || "Без опису 🐾",
-				ownerId: cat.ownerId || "user-1",
-				stats: cat.stats || {
-					likes: 0,
-					dislikes: 0,
-					superLikes: 0,
-				},
-			}));
-
-			setCats(prepared);
-			saveCats(prepared);
+			saveCats(initialCats);
+			setCats(initialCats);
 		}
 	}, []);
 
-	// 💖 відновлення match
+	// 📊 update stats
+	const updateStats = (catId, type) => {
+		setCats((prev) => {
+			const updated = prev.map((cat) => {
+				const stats = cat.stats || {
+					likes: 0,
+					dislikes: 0,
+					superLikes: 0,
+				};
+
+				if (cat.id === catId) {
+					return {
+						...cat,
+						stats: {
+							...stats,
+							[type]: (stats[type] || 0) + 1,
+						},
+					};
+				}
+
+				return cat;
+			});
+
+			saveCats(updated);
+
+			return updated;
+		});
+	};
+
+	// 💘 save like history
+	const saveLikeHistory = (catId) => {
+		const history = JSON.parse(localStorage.getItem("likesHistory")) || [];
+
+		history.push({
+			catId,
+			date: Date.now(),
+		});
+
+		localStorage.setItem("likesHistory", JSON.stringify(history));
+	};
+
+	// ❤️ like
+	const handleLike = (cat) => {
+		updateStats(cat.id, "likes");
+		saveLikeHistory(cat.id);
+	};
+
+	// ❌ dislike
+	const handleDislike = (cat) => {
+		updateStats(cat.id, "dislikes");
+	};
+
+	// ⭐ superlike
+	const handleSuperLike = (cat) => {
+		updateStats(cat.id, "superLikes");
+		saveLikeHistory(cat.id);
+	};
+
+	// 🔥 weekly match
 	useEffect(() => {
-		const saved = localStorage.getItem("match");
+		if (!cats.length) return;
 
-		if (!saved) return;
+		const history = JSON.parse(localStorage.getItem("likesHistory")) || [];
 
-		try {
-			const parsed = JSON.parse(saved);
-			const WEEK = 7 * 24 * 60 * 60 * 1000;
+		const WEEK = 7 * 24 * 60 * 60 * 1000;
 
-			if (Date.now() - parsed.date < WEEK) {
-				const matchedCats = cats.filter((cat) => parsed.cats.includes(cat.id));
+		const recentLikes = history.filter((item) => Date.now() - item.date < WEEK);
 
-				setMatch(matchedCats);
-			} else {
-				localStorage.removeItem("match");
-			}
-		} catch {
-			localStorage.removeItem("match");
+		const counts = {};
+
+		recentLikes.forEach((item) => {
+			counts[item.catId] = (counts[item.catId] || 0) + 1;
+		});
+
+		const sorted = Object.entries(counts)
+			.sort((a, b) => b[1] - a[1])
+			.slice(0, 2);
+
+		if (sorted.length < 2) return;
+
+		const matchedCats = sorted
+			.map(([id]) => cats.find((cat) => cat.id === Number(id)))
+			.filter(Boolean);
+
+		if (matchedCats.length === 2) {
+			setMatch(matchedCats);
 		}
 	}, [cats]);
-
-	// 💘 створення match
-	useEffect(() => {
-		if (likedCats.length === 2 && !match) {
-			const newMatch = [likedCats[0], likedCats[1]];
-
-			setMatch(newMatch);
-
-localStorage.setItem(
-	"match",
-	JSON.stringify({
-		cats: newMatch.map((cat) => cat.id),
-		date: Date.now(),
-	}),
-);
-
-			setLikedCats([]);
-		}
-	}, [likedCats, match]);
 
 	return (
 		<>

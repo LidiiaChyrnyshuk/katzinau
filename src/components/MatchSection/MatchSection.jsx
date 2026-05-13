@@ -5,8 +5,9 @@ import {
 	CardWrapper,
 	
 } from "./MatchSection.styled";
+export default function MatchSection({ cats }) {
+	if (!cats || cats.length < 2) return null;
 
-export default function MatchSection({ cats}) {
 	return (
 		<Wrapper>
 			<Title>
@@ -17,12 +18,11 @@ export default function MatchSection({ cats}) {
 
 			<Cards>
 				<CardWrapper left>
-					<img src={cats[0].img} alt={cats[0].name} />
+					<img src={cats[0]?.img} alt={cats[0]?.name} />
 				</CardWrapper>
 
 				<CardWrapper right>
-					<img src={cats[1].img} alt={cats[1].name} />
-					
+					<img src={cats[1]?.img} alt={cats[1]?.name} />
 				</CardWrapper>
 			</Cards>
 		</Wrapper>

@@ -1,180 +1,277 @@
+// src/pages/Profile.jsx
+
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { getCats, saveCats } from "../services/catsService";
 
 import {
-	Wrapper,
+	Page,
 	Title,
-	UserBlock,
-	Avatar,
-	UserName,
-	Filters,
-	Button,
-	Grid,
-	Card,
-	Image,
-	Info,
-	Stats,
-	Actions,
+	OwnerTable,
+	TableRow,
+	TableLabel,
+	TableValue,
 	Input,
 	Textarea,
+	CatsTable,
+	CatRow,
+	CatImage,
+	CatInfo,
+	CatName,
+	CatStats,
+	Buttons,
+	Button,
+	AddButton,
+	Empty,
 } from "./Profile.styled";
 
 export default function Profile() {
-	const [cats, setCats] = useState([]);
-	const [editingId, setEditingId] = useState(null);
-	const [filter, setFilter] = useState("all");
+	const navigate = useNavigate();
+
 	const [user, setUser] = useState(null);
+	const [cats, setCats] = useState([]);
 
-	// fake auth
+	const [editingOwner, setEditingOwner] = useState(false);
+	const [editingCatId, setEditingCatId] = useState(null);
+
 	useEffect(() => {
-		let storedUser = localStorage.getItem("user");
+		const storedUser = JSON.parse(localStorage.getItem("user")) || null;
 
-		if (!storedUser) {
-			const fakeUser = {
-				id: "user-1",
-				name: "Cat Lover",
-				avatar: "https://i.pravatar.cc/150?img=12",
-			};
+		setUser(storedUser);
 
-			localStorage.setItem("user", JSON.stringify(fakeUser));
-			setUser(fakeUser);
-		} else {
-			setUser(JSON.parse(storedUser));
+		const allCats = getCats() || [];
+
+		if (storedUser) {
+			const myCats = allCats.filter((cat) => cat.ownerId === storedUser.id);
+
+			setCats(myCats);
 		}
 	}, []);
 
-	useEffect(() => {
-		setCats(getCats());
-	}, []);
-
-	// ❌ delete
-	const handleDelete = (id) => {
-		const updated = cats.filter((c) => c.id !== id);
-		setCats(updated);
-		saveCats(updated);
-	};
-
-	// ✏️ edit
-	const handleChange = (id, field, value) => {
-		const updated = cats.map((c) =>
-			c.id === id ? { ...c, [field]: value } : c,
+	// 🐱 update cat
+	const handleCatChange = (id, field, value) => {
+		setCats((prev) =>
+			prev.map((cat) =>
+				cat.id === id
+					? {
+							...cat,
+							[field]: value,
+						}
+					: cat,
+			),
 		);
-		setCats(updated);
 	};
 
-	const handleSave = () => {
-		saveCats(cats);
-		setEditingId(null);
+	// 👤 update owner
+	const handleOwnerChange = (field, value) => {
+		setUser((prev) => ({
+			...prev,
+			[field]: value,
+		}));
 	};
 
-	// 🎯 filter
-	const filteredCats = cats.filter((cat) => {
-		if (filter === "mine") return cat.ownerId === user?.id;
-		if (filter === "popular") return (cat.stats?.likes || 0) > 5;
-		return true;
-	});
+	// 💾 save owner
+	const saveOwner = () => {
+		localStorage.setItem("user", JSON.stringify(user));
+		setEditingOwner(false);
+	};
 
-	// 💘 history (просто беремо лайкнуті > 0)
-	const likedHistory = cats.filter((c) => (c.stats?.likes || 0) > 0);
+	// 💾 save cat
+	const saveCat = (id) => {
+		const allCats = getCats() || [];
+
+		const updated = allCats.map((cat) => {
+			const edited = cats.find((c) => c.id === cat.id);
+
+			return edited || cat;
+		});
+
+		saveCats(updated);
+
+		setEditingCatId(null);
+	};
+
+	// 🗑 delete
+	const handleDelete = (id) => {
+		const allCats = getCats() || [];
+
+		const updated = allCats.filter((cat) => cat.id !== id);
+
+		saveCats(updated);
+
+		setCats(updated.filter((cat) => cat.ownerId === user.id));
+	};
+
+	if (!user) {
+		return (
+			<Page>
+				<Title>🐾 Мої котики</Title>
+
+				<Empty>Поки профіль не створений 🐱</Empty>
+
+				<AddButton onClick={() => navigate("/addCat")}>Додати котика</AddButton>
+			</Page>
+		);
+	}
 
 	return (
-		<Wrapper>
-			<Title>Профіль 😼</Title>
-
-			{/* USER */}
-			{user && (
-				<UserBlock>
-					<Avatar src={user.avatar} />
-					<UserName>{user.name}</UserName>
-				</UserBlock>
-			)}
-
-			{/* FILTERS */}
-			<Filters>
-				<Button onClick={() => setFilter("all")}>Всі</Button>
-				<Button onClick={() => setFilter("mine")}>Мої</Button>
-				<Button onClick={() => setFilter("popular")}>Популярні</Button>
-			</Filters>
+		<Page>
+			<Title>🐾 Мої котики</Title>
 
 			{/* CATS */}
-			<Grid>
-				{filteredCats.map((cat) => {
-					const isEditing = editingId === cat.id;
 
-					return (
-						<Card key={cat.id}>
-							<Image src={cat.img} />
+			<CatsTable>
+				{cats.length === 0 ? (
+					<Empty>У тебе ще немає котиків 🐾</Empty>
+				) : (
+					cats.map((cat) => {
+						const stats = cat.stats || {
+							likes: 0,
+							dislikes: 0,
+							superLikes: 0,
+						};
 
-							<Info>
-								{isEditing ? (
-									<>
-										<Input
-											value={cat.name}
-											onChange={(e) =>
-												handleChange(cat.id, "name", e.target.value)
-											}
-										/>
-										<Input
-											value={cat.age}
-											onChange={(e) =>
-												handleChange(cat.id, "age", e.target.value)
-											}
-										/>
-										<Textarea
-											value={cat.description}
-											onChange={(e) =>
-												handleChange(cat.id, "description", e.target.value)
-											}
-										/>
-									</>
-								) : (
-									<>
-										<h3 >
-											{cat.name}, {cat.age}
-										</h3>
-										<p >{cat.description}</p>
-									</>
-								)}
+						const editing = editingCatId === cat.id;
 
-								{/* 📊 stats */}
-								<Stats>
-									<span>❤️ {cat.stats?.likes || 0}</span>
-									<span>⭐ {cat.stats?.superLikes || 0}</span>
-									<span>❌ {cat.stats?.dislikes || 0}</span>
-								</Stats>
+						return (
+							<CatRow key={cat.id}>
+								<CatImage src={cat.img} alt={cat.name} title="Фото котика 🐾" />
 
-								{/* actions */}
-								<Actions>
-									{isEditing ? (
-										<Button onClick={handleSave}>💾</Button>
+								<CatInfo>
+									{editing ? (
+										<>
+											<Input
+												placeholder="Введіть нове ім’я котика"
+												value={cat.name}
+												onChange={(e) =>
+													handleCatChange(cat.id, "name", e.target.value)
+												}
+											/>
+
+											<Input
+												placeholder="Введіть новий вік"
+												value={cat.age}
+												onChange={(e) =>
+													handleCatChange(cat.id, "age", e.target.value)
+												}
+											/>
+
+											<Textarea
+												placeholder="Введіть новий опис"
+												value={cat.description}
+												onChange={(e) =>
+													handleCatChange(cat.id, "description", e.target.value)
+												}
+											/>
+
+											<Input
+												type="file"
+												accept="image/*"
+												onChange={(e) => {
+													const file = e.target.files[0];
+
+													if (!file) return;
+
+													const reader = new FileReader();
+
+													reader.onloadend = () => {
+														handleCatChange(cat.id, "img", reader.result);
+													};
+
+													reader.readAsDataURL(file);
+												}}
+											/>
+										</>
 									) : (
-										<Button onClick={() => setEditingId(cat.id)}>✏️</Button>
+										<>
+											<CatName>
+												{cat.name}, {cat.age}
+											</CatName>
+
+											<p>{cat.description}</p>
+										</>
 									)}
 
-									<Button onClick={() => handleDelete(cat.id)}>❌</Button>
-								</Actions>
-							</Info>
-						</Card>
-					);
-				})}
-			</Grid>
+									<CatStats>
+										<span>❤️ {stats.likes}</span>
 
-			{/* 💘 HISTORY */}
-			<Title>Історія лайків 💘</Title>
+										<span>⭐ {stats.superLikes}</span>
 
-			<Grid>
-				{likedHistory.map((cat) => (
-					<Card key={cat.id}>
-						<Image src={cat.img} />
-						<Info>
-							<h3>{cat.name}</h3>
-							<Stats>
-								<span>❤️ {cat.stats?.likes || 0}</span>
-							</Stats>
-						</Info>
-					</Card>
-				))}
-			</Grid>
-		</Wrapper>
+										<span>❌ {stats.dislikes}</span>
+									</CatStats>
+
+									<Buttons>
+										{editing ? (
+											<Button onClick={() => saveCat(cat.id)}>
+												💾 
+											</Button>
+										) : (
+											<Button onClick={() => setEditingCatId(cat.id)}>
+												✏️ 
+											</Button>
+										)}
+
+										<Button onClick={() => handleDelete(cat.id)}>
+											🗑 
+										</Button>
+									</Buttons>
+								</CatInfo>
+							</CatRow>
+						);
+					})
+				)}
+			</CatsTable>
+			{/* OWNER */}
+
+			<OwnerTable>
+				<TableRow>
+					<TableLabel>Власник</TableLabel>
+
+					<TableValue>
+						{editingOwner ? (
+							<Input
+								value={user.name}
+								onChange={(e) => handleOwnerChange("name", e.target.value)}
+							/>
+						) : (
+							user.name
+						)}
+					</TableValue>
+				</TableRow>
+
+				<TableRow>
+					<TableLabel>Про себе</TableLabel>
+
+					<TableValue>
+						{editingOwner ? (
+							<Textarea
+								value={user.bio}
+								onChange={(e) => handleOwnerChange("bio", e.target.value)}
+							/>
+						) : (
+							user.bio || "Люблю котиків 🐾"
+						)}
+					</TableValue>
+				</TableRow>
+
+				<TableRow>
+					<TableLabel>Kотиків</TableLabel>
+
+					<TableValue>{cats.length}</TableValue>
+				</TableRow>
+
+				<Buttons>
+					{editingOwner ? (
+						<Button onClick={saveOwner}>💾 </Button>
+					) : (
+						<Button onClick={() => setEditingOwner(true)}>✏️ </Button>
+					)}
+				</Buttons>
+			</OwnerTable>
+
+			<AddButton onClick={() => navigate("/addCat")}>
+				+ Додати ще котика
+			</AddButton>
+		</Page>
 	);
 }
