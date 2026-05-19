@@ -1,5 +1,3 @@
-// src/pages/Profile.styled.js
-
 import styled from "styled-components";
 
 const gradient = "linear-gradient(88.01deg, #fd267a 0%, #ff6036 100%)";
@@ -8,6 +6,7 @@ export const Page = styled.section`
 	padding: 40px 10px 40px;
 	max-width: 500px;
 	margin: 0 auto;
+	background: #ffffff;
 `;
 
 export const Title = styled.h1`

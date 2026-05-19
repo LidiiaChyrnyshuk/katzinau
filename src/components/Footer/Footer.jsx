@@ -1,9 +1,10 @@
 import RunningSlider from "../RunningSlider/RunningSlider";
+import {FooterSection} from "./Footer.styled"
 
 export default function Footer() {
 	return (
-		<section>
+		<FooterSection>
 			<RunningSlider />
-		</section>
+		</FooterSection>
 	);
 }

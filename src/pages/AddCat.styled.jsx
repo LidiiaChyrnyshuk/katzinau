@@ -4,6 +4,7 @@ export const Wrapper = styled.div`
 	max-width: 500px;
 	margin: 40px auto;
 	padding: 16px;
+	background: #ffffff;
 `;
 
 export const Title = styled.h2`

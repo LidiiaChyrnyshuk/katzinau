@@ -1,11 +1,11 @@
 import styled from '@emotion/styled';
 
 export const Header = styled.header`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
 
-  width:100%;
-  max-width:100%;
-  
+	width: 100%;
+	max-width: 100%;
+	background: #ffffff;
 `;

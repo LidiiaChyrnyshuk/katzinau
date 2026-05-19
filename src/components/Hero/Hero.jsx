@@ -4,7 +4,7 @@ import Button from "../Button/Button";
 
 const HeroSection = styled.section`
 	text-align: center;
-	
+	background: #ffffff;
 `;
 
 const TitleText = styled.div`
