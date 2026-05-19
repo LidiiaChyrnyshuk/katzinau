@@ -17,11 +17,11 @@ export const StyledLink = styled(NavLink)`
 	}
 
 	&.active {
-		color: #333333;
+		color: #ffffff;
 		background: linear-gradient(88.01deg, #fd267a 0%, #ff6036 100%);
 
 		&:hover {
-			color: black;
+			color: #ffffff;
 		}
 	}
 `;

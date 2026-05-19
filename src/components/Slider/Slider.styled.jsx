@@ -93,7 +93,7 @@ export const SliderContainer = styled.div`
 
 	overflow: hidden;
 
-	border-radius: 24px;
+	border-radius: 0;
 	border: 2px solid transparent;
 
 	background-image: linear-gradient(
@@ -111,7 +111,7 @@ export const SliderContainer = styled.div`
 	padding: 8px 0;
 
 	@media (min-width: 960px) {
-		border-radius: 32px;
+		border-radius: 0;
 		padding: 16px 0;
 	}
 `;

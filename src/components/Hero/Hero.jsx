@@ -5,6 +5,7 @@ import Button from "../Button/Button";
 const HeroSection = styled.section`
 	text-align: center;
 	background: #ffffff;
+	padding-top:30px;
 `;
 
 const TitleText = styled.div`
@@ -16,7 +17,7 @@ const TitleText = styled.div`
 	text-align: center;
 	text-transform: uppercase;
 	text-decoration: none;
-	margin: 30px 0 0 0;
+	margin: 0 0 0 0;
 
 	&::after {
 		content: "";
@@ -50,7 +51,7 @@ const TitleText = styled.div`
 `;
 const SubTitleText = styled.div`
   color: #131313;
-  font-weight: 400;
+  font-weight: 700;
   font-size: 12px;
   line-height: 1.2;
   text-align: center;
@@ -64,7 +65,7 @@ const SubTitleText = styled.div`
   justify-content: center;
 
   @media (min-width: 1024px) {
-    font-size: 24px;
+    font-size: 20px;
   }
 `;
 

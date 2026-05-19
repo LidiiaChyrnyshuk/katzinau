@@ -13,7 +13,7 @@ export default function MatchSection({ cats }) {
 			<Title>
 				ІДЕАЛЬНА ПАРА:
 				<br />
-				МУР-МАТЧ ТИЖНЯ
+				МУР-МАТЧ 
 			</Title>
 
 			<Cards>

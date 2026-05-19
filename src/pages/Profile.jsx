@@ -1,4 +1,3 @@
-// src/pages/Profile.jsx
 
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -12,8 +11,6 @@ import {
 	TableLabel,
 	TableValue,
 	Input,
-	Textarea,
-	Textarea1,
 	CatsTable,
 	CatRow,
 	CatImage,
@@ -24,6 +21,7 @@ import {
 	Button,
 	AddButton,
 	Empty,
+	PreviewImage,
 } from "./Profile.styled";
 
 export default function Profile() {
@@ -35,16 +33,16 @@ export default function Profile() {
 	const [editingOwner, setEditingOwner] = useState(false);
 	const [editingCatId, setEditingCatId] = useState(null);
 
+	// Тимчасовий стейт суто для відображення нового вибраного фото
+	const [filePreview, setFilePreview] = useState(null);
+
 	useEffect(() => {
 		const storedUser = JSON.parse(localStorage.getItem("user")) || null;
-
 		setUser(storedUser);
 
 		const allCats = getCats() || [];
-
 		if (storedUser) {
 			const myCats = allCats.filter((cat) => cat.ownerId === storedUser.id);
-
 			setCats(myCats);
 		}
 	}, []);
@@ -52,14 +50,7 @@ export default function Profile() {
 	// 🐱 update cat
 	const handleCatChange = (id, field, value) => {
 		setCats((prev) =>
-			prev.map((cat) =>
-				cat.id === id
-					? {
-							...cat,
-							[field]: value,
-						}
-					: cat,
-			),
+			prev.map((cat) => (cat.id === id ? { ...cat, [field]: value } : cat)),
 		);
 	};
 
@@ -75,6 +66,7 @@ export default function Profile() {
 	const saveOwner = () => {
 		localStorage.setItem("user", JSON.stringify(user));
 		setEditingOwner(false);
+		window.dispatchEvent(new Event("storage"));
 	};
 
 	// 💾 save cat
@@ -83,33 +75,59 @@ export default function Profile() {
 
 		const updated = allCats.map((cat) => {
 			const edited = cats.find((c) => c.id === cat.id);
-
-			return edited || cat;
+			return edited ? edited : cat;
 		});
 
 		saveCats(updated);
-
 		setEditingCatId(null);
+		setFilePreview(null); // Очищаємо прев'ю після збереження
 	};
 
 	// 🗑 delete
 	const handleDelete = (id) => {
 		const allCats = getCats() || [];
-
 		const updated = allCats.filter((cat) => cat.id !== id);
 
 		saveCats(updated);
+		setCats((prev) => prev.filter((cat) => cat.id !== id));
+	};
 
-		setCats(updated.filter((cat) => cat.ownerId === user.id));
+	// 👤 Повне видалення профілю власника та його котиків
+	const handleDeleteOwner = () => {
+		const confirmDelete = window.confirm(
+			"Ви впевнені, що хочете видалити свій профіль та всіх своїх котиків? 🐾",
+		);
+
+		if (confirmDelete) {
+			// 1. Очищаємо всі дані провайдера з localStorage
+			localStorage.removeItem("user");
+
+			// 2. Видаляємо з бази котиків, які належали цьому власнику
+			const allCats = getCats() || [];
+			const remainingCats = allCats.filter((cat) => cat.ownerId !== user.id);
+			saveCats(remainingCats);
+
+			// 3. Скидаємо локальний стейт, щоб спрацював екран "Поки профіль не створений"
+			setUser(null);
+			setCats([]);
+			setEditingOwner(false);
+
+			// Оповіщаємо систему про зміни в сховищі
+			window.dispatchEvent(new Event("storage"));
+		}
+	};
+
+	// Кнопка редагування котика (скидаємо прев'ю перед початком)
+	const startEditingCat = (id) => {
+		setEditingCatId(id);
+		setFilePreview(null);
 	};
 
 	if (!user) {
 		return (
 			<Page>
 				<Title>🐾 Мої котики</Title>
-
 				<Empty>Поки профіль не створений 🐱</Empty>
-
 				<AddButton onClick={() => navigate("/addCat")}>
 					+ Додати котика
 				</AddButton>
@@ -126,12 +144,7 @@ export default function Profile() {
 					<Empty>У тебе ще немає котиків 🐾</Empty>
 				) : (
 					cats.map((cat) => {
-						const stats = cat.stats || {
-							likes: 0,
-							dislikes: 0,
-							superLikes: 0,
-						};
-
+						const stats = cat.stats || { likes: 0, dislikes: 0, superLikes: 0 };
 						const editing = editingCatId === cat.id;
 
 						return (
@@ -143,7 +156,7 @@ export default function Profile() {
 										<>
 											<Input
 												value={cat.name || ""}
-												placeholder={cat.name || "Ім’я"}
+												placeholder="Ім’я"
 												onChange={(e) =>
 													handleCatChange(cat.id, "name", e.target.value)
 												}
@@ -151,42 +164,48 @@ export default function Profile() {
 
 											<Input
 												value={cat.age || ""}
-												placeholder={cat.age || "Вік"}
+												placeholder="Вік"
 												onChange={(e) =>
 													handleCatChange(cat.id, "age", e.target.value)
 												}
 											/>
 
-											<Textarea
+											<Input
 												value={cat.description || ""}
-												placeholder={cat.description || "Опис"}
+												placeholder="Опис котика"
 												onChange={(e) =>
-													handleCatChange(
-														cat.id,
-														"description",
-														e.target.value,
-													)
+													handleCatChange(cat.id, "description", e.target.value)
 												}
 											/>
+
+											{/* ПРЕВ'Ю: Показується ТІЛЬКИ тоді, коли файл обрано в інпуті */}
+											{filePreview && (
+												<div>
+													<span style={{ fontSize: "12px", opacity: 0.6 }}>
+														Нове фото:
+													</span>
+													<br />
+													<PreviewImage
+														src={filePreview}
+														alt="Попередній перегляд"
+													/>
+												</div>
+											)}
 
 											<Input
 												type="file"
 												accept="image/*"
 												onChange={(e) => {
 													const file = e.target.files[0];
-
 													if (!file) return;
 
 													const reader = new FileReader();
-
 													reader.onloadend = () => {
-														handleCatChange(
-															cat.id,
-															"img",
-															reader.result,
-														);
+														// 1. Показуємо прев'ю на екрані
+														setFilePreview(reader.result);
+														// 2. Записуємо дані у стейт котика для майбутнього збереження
+														handleCatChange(cat.id, "img", reader.result);
 													};
-
 													reader.readAsDataURL(file);
 												}}
 											/>
@@ -196,16 +215,13 @@ export default function Profile() {
 											<CatName>
 												{cat.name}, {cat.age}
 											</CatName>
-
-											<p>{cat.description}</p>
+											<p style={{ margin: 0 }}>{cat.description}</p>
 										</>
 									)}
 
 									<CatStats>
 										<span>❤️ {stats.likes}</span>
-
 										<span>⭐ {stats.superLikes}</span>
-
 										<span>❌ {stats.dislikes}</span>
 									</CatStats>
 
@@ -213,12 +229,18 @@ export default function Profile() {
 										{editing ? (
 											<Button onClick={saveCat}>💾</Button>
 										) : (
-											<Button onClick={() => setEditingCatId(cat.id)}>
+											<Button onClick={() => startEditingCat(cat.id)}>
 												✏️
 											</Button>
 										)}
 
-										<Button onClick={() => handleDelete(cat.id)}>
+										<Button
+											onClick={() => handleDelete(cat.id)}
+											style={{
+												background:
+													"linear-gradient(88.01deg, #ff4d4d 0%, #ff0000 100%)",
+											}}
+										>
 											🗑
 										</Button>
 									</Buttons>
@@ -232,15 +254,12 @@ export default function Profile() {
 			<OwnerTable>
 				<TableRow>
 					<TableLabel>Власник</TableLabel>
-
 					<TableValue>
 						{editingOwner ? (
 							<Input
 								value={user.name || ""}
-								placeholder={user.name || "Ім’я"}
-								onChange={(e) =>
-									handleOwnerChange("name", e.target.value)
-								}
+								placeholder="Ім’я"
+								onChange={(e) => handleOwnerChange("name", e.target.value)}
 							/>
 						) : (
 							user.name
@@ -250,15 +269,12 @@ export default function Profile() {
 
 				<TableRow>
 					<TableLabel>Про себе</TableLabel>
-
 					<TableValue>
 						{editingOwner ? (
-							<Textarea1
+							<Input
 								value={user.bio || ""}
-								placeholder={user.bio || "Про себе"}
-								onChange={(e) =>
-									handleOwnerChange("bio", e.target.value)
-								}
+								placeholder="Про себе"
+								onChange={(e) => handleOwnerChange("bio", e.target.value)}
 							/>
 						) : (
 							user.bio || "Люблю котиків 🐾"
@@ -268,7 +284,6 @@ export default function Profile() {
 
 				<TableRow>
 					<TableLabel>Kотиків</TableLabel>
-
 					<TableValue>{cats.length}</TableValue>
 				</TableRow>
 
@@ -276,7 +291,19 @@ export default function Profile() {
 					{editingOwner ? (
 						<Button onClick={saveOwner}>💾</Button>
 					) : (
-						<Button onClick={() => setEditingOwner(true)}>✏️</Button>
+						<>
+							<Button onClick={() => setEditingOwner(true)}>✏️</Button>
+							{/* Нова кнопка видалення профілю */}
+							<Button
+								onClick={handleDeleteOwner}
+								style={{
+									background:
+										"linear-gradient(88.01deg, #ff4d4d 0%, #ff0000 100%)",
+								}}
+							>
+								🗑
+							</Button>
+						</>
 					)}
 				</Buttons>
 			</OwnerTable>

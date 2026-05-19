@@ -17,7 +17,7 @@ const CTAButton = styled(Link)`
 	border-radius: 40px;
 	text-decoration: none;
 
-	box-shadow: 0 10px 20px rgba(255, 77, 109, 0.3);
+	
 
 	transition: all 0.2s ease;
 

@@ -1,5 +1,6 @@
-import { Card, Img, Info, Actions } from "./CatCard.styled";
 
+import { Card, Img, Info, Actions, ActionButton } from "./CatCard.styled";
+import { IoCloseSharp, IoHeartSharp, IoStarSharp } from "react-icons/io5";
 
 export default function CatCard({ cat, onLike, onDislike, onSuperLike }) {
 	return (
@@ -14,9 +15,32 @@ export default function CatCard({ cat, onLike, onDislike, onSuperLike }) {
 			</Info>
 
 			<Actions>
-				<button onClick={() => onDislike(cat)}>❌</button>
-				<button onClick={() => onSuperLike(cat)}>⭐</button>
-				<button onClick={() => onLike(cat)}>❤️</button>
+				{/* ❌ Дизлайк — Червоний хрестик */}
+				<ActionButton
+					onClick={() => onDislike(cat)}
+					iconColor="#ff4d4d"
+					title="Дизлайк"
+				>
+					<IoCloseSharp size={18} />
+				</ActionButton>
+
+				{/* ⭐ Суперлайк — Жовта зірочка */}
+				<ActionButton
+					onClick={() => onSuperLike(cat)}
+					iconColor="#ffcc00"
+					title="Суперлайк"
+				>
+					<IoStarSharp size={18} />
+				</ActionButton>
+
+				{/* ❤️ Лайк — Червоне серце */}
+				<ActionButton
+					onClick={() => onLike(cat)}
+					iconColor="#fd2c72"
+					title="Лайк"
+				>
+					<IoHeartSharp size={18} />
+				</ActionButton>
 			</Actions>
 		</Card>
 	);
