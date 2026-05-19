@@ -6,7 +6,7 @@ const CTAButton = styled(Link)`
 	margin-top: 24px;
 	padding: 16px 32px;
 
-	background: linear-gradient(88.01deg, #fd267a 0%, #ff6036 100%);
+	background: linear-gradient(88.01deg, #FD267A 0%, #FF6036 100%);
 
 	color: white;
 
@@ -22,7 +22,7 @@ const CTAButton = styled(Link)`
 	transition: all 0.2s ease;
 
 	&:hover {
-		transform: scale(1.05);
+		transform: scale(1.02);
 	}
 
 	@media (min-width: 1024px) {

@@ -13,6 +13,7 @@ import {
 	TableValue,
 	Input,
 	Textarea,
+	Textarea1,
 	CatsTable,
 	CatRow,
 	CatImage,
@@ -77,7 +78,7 @@ export default function Profile() {
 	};
 
 	// 💾 save cat
-	const saveCat = (id) => {
+	const saveCat = () => {
 		const allCats = getCats() || [];
 
 		const updated = allCats.map((cat) => {
@@ -109,7 +110,9 @@ export default function Profile() {
 
 				<Empty>Поки профіль не створений 🐱</Empty>
 
-				<AddButton onClick={() => navigate("/addCat")}>Додати котика</AddButton>
+				<AddButton onClick={() => navigate("/addCat")}>
+					+ Додати котика
+				</AddButton>
 			</Page>
 		);
 	}
@@ -117,8 +120,6 @@ export default function Profile() {
 	return (
 		<Page>
 			<Title>🐾 Мої котики</Title>
-
-			{/* CATS */}
 
 			<CatsTable>
 				{cats.length === 0 ? (
@@ -135,32 +136,36 @@ export default function Profile() {
 
 						return (
 							<CatRow key={cat.id}>
-								<CatImage src={cat.img} alt={cat.name} title="Фото котика 🐾" />
+								<CatImage src={cat.img} alt={cat.name} />
 
 								<CatInfo>
 									{editing ? (
 										<>
 											<Input
-												placeholder="Введіть нове ім’я котика"
-												value={cat.name}
+												value={cat.name || ""}
+												placeholder={cat.name || "Ім’я"}
 												onChange={(e) =>
 													handleCatChange(cat.id, "name", e.target.value)
 												}
 											/>
 
 											<Input
-												placeholder="Введіть новий вік"
-												value={cat.age}
+												value={cat.age || ""}
+												placeholder={cat.age || "Вік"}
 												onChange={(e) =>
 													handleCatChange(cat.id, "age", e.target.value)
 												}
 											/>
 
 											<Textarea
-												placeholder="Введіть новий опис"
-												value={cat.description}
+												value={cat.description || ""}
+												placeholder={cat.description || "Опис"}
 												onChange={(e) =>
-													handleCatChange(cat.id, "description", e.target.value)
+													handleCatChange(
+														cat.id,
+														"description",
+														e.target.value,
+													)
 												}
 											/>
 
@@ -175,7 +180,11 @@ export default function Profile() {
 													const reader = new FileReader();
 
 													reader.onloadend = () => {
-														handleCatChange(cat.id, "img", reader.result);
+														handleCatChange(
+															cat.id,
+															"img",
+															reader.result,
+														);
 													};
 
 													reader.readAsDataURL(file);
@@ -202,17 +211,15 @@ export default function Profile() {
 
 									<Buttons>
 										{editing ? (
-											<Button onClick={() => saveCat(cat.id)}>
-												💾 
-											</Button>
+											<Button onClick={saveCat}>💾</Button>
 										) : (
 											<Button onClick={() => setEditingCatId(cat.id)}>
-												✏️ 
+												✏️
 											</Button>
 										)}
 
 										<Button onClick={() => handleDelete(cat.id)}>
-											🗑 
+											🗑
 										</Button>
 									</Buttons>
 								</CatInfo>
@@ -221,7 +228,6 @@ export default function Profile() {
 					})
 				)}
 			</CatsTable>
-			{/* OWNER */}
 
 			<OwnerTable>
 				<TableRow>
@@ -230,8 +236,11 @@ export default function Profile() {
 					<TableValue>
 						{editingOwner ? (
 							<Input
-								value={user.name}
-								onChange={(e) => handleOwnerChange("name", e.target.value)}
+								value={user.name || ""}
+								placeholder={user.name || "Ім’я"}
+								onChange={(e) =>
+									handleOwnerChange("name", e.target.value)
+								}
 							/>
 						) : (
 							user.name
@@ -244,9 +253,12 @@ export default function Profile() {
 
 					<TableValue>
 						{editingOwner ? (
-							<Textarea
-								value={user.bio}
-								onChange={(e) => handleOwnerChange("bio", e.target.value)}
+							<Textarea1
+								value={user.bio || ""}
+								placeholder={user.bio || "Про себе"}
+								onChange={(e) =>
+									handleOwnerChange("bio", e.target.value)
+								}
 							/>
 						) : (
 							user.bio || "Люблю котиків 🐾"
@@ -262,9 +274,9 @@ export default function Profile() {
 
 				<Buttons>
 					{editingOwner ? (
-						<Button onClick={saveOwner}>💾 </Button>
+						<Button onClick={saveOwner}>💾</Button>
 					) : (
-						<Button onClick={() => setEditingOwner(true)}>✏️ </Button>
+						<Button onClick={() => setEditingOwner(true)}>✏️</Button>
 					)}
 				</Buttons>
 			</OwnerTable>

@@ -18,7 +18,7 @@ export const Title = styled.h1`
 	text-align: center;
 	text-transform: uppercase;
 	text-decoration: none;
-	margin:0 0 30px 0;
+	margin: 0 0 30px 0;
 `;
 
 export const OwnerTable = styled.div`
@@ -126,10 +126,16 @@ export const Button = styled.button`
 	padding: 12px 18px;
 
 	background: ${gradient};
-
+opacity: 0.8;
 	color: white;
 	font-size: 14px;
 	cursor: pointer;
+
+  transition: all 0.2s ease;
+
+  &:hover {
+	transform: translateY(-2px);
+	opacity: 1;
 `;
 
 export const AddButton = styled.button`
@@ -139,12 +145,18 @@ export const AddButton = styled.button`
 	border: none;
 	border-radius: 18px;
 	padding: 18px;
-
+opacity: 0.8;
 	background: ${gradient};
 
 	color: white;
 	font-size: 18px;
 	cursor: pointer;
+
+  transition: all 0.2s ease;
+
+  &:hover {
+	transform: translateY(-2px);
+	opacity: 1;
 `;
 
 export const Empty = styled.p`
@@ -157,21 +169,39 @@ export const Input = styled.input`
 	width: 100%;
 	padding: 14px;
 	border-radius: 14px;
-	border: none;
+	border: 1px solid #ff6036;
 	background: rgba(255, 255, 255, 0.08);
 	color: white;
+	
 `;
 
 export const Textarea = styled.textarea`
 	width: 100%;
-	min-height: 100px;
+	min-height: 46px;
 
-	padding: 14px;
+	padding: 4px;
 	border-radius: 14px;
-	border: none;
+	border: 1px solid #ff6036;
 
 	background: rgba(255, 255, 255, 0.08);
 
 	color: white;
 	resize: vertical;
+	
 `;
+
+export const Textarea1 = styled.textarea`
+	width: 100%;
+	min-height: 40px;
+
+	padding: 4px;
+	border-radius: 14px;
+	border: 1px solid #ff6036;
+
+	background: rgba(255, 255, 255, 0.08);
+
+	color: white;
+	resize: vertical;
+  margin-left:16px;
+`;
+
