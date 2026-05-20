@@ -51,7 +51,7 @@ const TitleText = styled.div`
 `;
 const SubTitleText = styled.div`
   color: #131313;
-  font-weight: 700;
+  font-weight: 500;
   font-size: 12px;
   line-height: 1.2;
   text-align: center;

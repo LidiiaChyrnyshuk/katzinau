@@ -117,8 +117,8 @@ export const SliderContainer = styled.div`
 `;
 
 export const Mask = styled.div`
-	--mask-left: 5%;
-	--mask-right: 95%;
+	--mask-left: 1%;
+	--mask-right: 99%;
 
 	-webkit-mask-image: linear-gradient(
 		to right,
