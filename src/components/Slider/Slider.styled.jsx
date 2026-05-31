@@ -59,6 +59,7 @@ z-index:5;
 
 		@media (min-width: 1024px) {
 				font-size: 90px;
+				line-height: 1.1;}
 		
 				&::after {
 					content: "";

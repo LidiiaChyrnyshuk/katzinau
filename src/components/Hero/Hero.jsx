@@ -34,6 +34,7 @@ const TitleText = styled.div`
 
 	@media (min-width: 1024px) {
 		font-size: 90px;
+		line-height: 1.1;}
 
 		&::after {
 			content: "";
@@ -50,23 +51,24 @@ const TitleText = styled.div`
 	}
 `;
 const SubTitleText = styled.div`
-  color: #131313;
-  font-weight: 500;
-  font-size: 12px;
-  line-height: 1.2;
-  text-align: center;
-  text-transform: uppercase;
-  text-decoration: none;
-  margin: 20px auto 0 auto;
-  width:100%;
-  max-width: 580px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+	color: #131313;
+	font-weight: 500;
+	font-size: 12px;
+	line-height: 1.2;
+	text-align: center;
+	text-transform: uppercase;
+	text-decoration: none;
+	margin: 20px auto 0 auto;
+	width: 100%;
+	max-width: 290px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 
-  @media (min-width: 1024px) {
-    font-size: 20px;
-  }
+	@media (min-width: 1024px) {
+		font-size: 20px;
+		max-width: 580px;
+	}
 `;
 
 

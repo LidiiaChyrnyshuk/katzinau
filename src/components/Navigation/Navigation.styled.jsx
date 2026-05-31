@@ -9,6 +9,10 @@ export const StyledLink = styled(NavLink)`
 	border-radius: 8px;
 	font-weight: 500;
 	font-size: 12px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	
 	transition: background-color 0.4s ease;
 
 	@media (min-width: 1024px) {
@@ -30,12 +34,16 @@ export const NavigationList = styled.nav`
 	display: flex;
 	flex-direction: row;
 	align-items: center;
-	justify-content: center;
-
+	justify-content: flex-end;
+	gap: 0;
+	padding-right: 16px;
 	width: 100%;
 
+	@media (min-width: 478px) {
+		gap: 10px;
+	}
+
 	@media (min-width: 1024px) {
-		
-	
+		gap: 20px;
 	}
 `;
