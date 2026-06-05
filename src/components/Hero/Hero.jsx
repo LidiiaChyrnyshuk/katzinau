@@ -34,7 +34,7 @@ const TitleText = styled.div`
 
 	@media (min-width: 1024px) {
 		font-size: 90px;
-		line-height: 1.1;}
+		line-height: 1.1;
 
 		&::after {
 			content: "";

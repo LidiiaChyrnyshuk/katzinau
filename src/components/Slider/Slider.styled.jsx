@@ -34,7 +34,7 @@ z-index:5;
 			content: "";
 			position: absolute;
 			top: 0;
-			right: 50%;
+			right: 47%;
 			width: 11.11vw;
 			height: 8.33vw;
 	
@@ -60,7 +60,7 @@ z-index:5;
 
 		@media (min-width: 1024px) {
 				font-size: 90px;
-				line-height: 1.1;}
+				line-height: 1.1;
 		
 				&::after {
 					content: "";
