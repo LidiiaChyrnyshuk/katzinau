@@ -11,6 +11,7 @@ export const SliderSection = styled.section`
 	contain: layout paint;
 	background: #fd2c72;
 	margin-top: 20px;
+	border-radius: 8px;
 
 	@media (min-width: 960px) {
 		padding-bottom: 20px;
@@ -64,7 +65,7 @@ z-index:5;
 				&::after {
 					content: "";
 					position: absolute;
-					top: 0;
+					top: -20px;
 					right: 30%;
 					width: 180px;
 					height: 170px;
